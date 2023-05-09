@@ -7,9 +7,9 @@ import { useContext } from "react";
 import { URL } from '../App'
 import AuthContext from '../context/Auth';
 
-const Login = ({setUserInfo}) => {
+const Login = () => {
   const navigate = useNavigate()
-  const { verifyAuth } = useContext(AuthContext);
+  const { verifyAuth,userValue } = useContext(AuthContext);
   const LoginSubmit = async (e) => {
     e.preventDefault()
     if(!e.target.email.value || !e.target.password.value) {
@@ -22,7 +22,8 @@ const Login = ({setUserInfo}) => {
         password: e.target.password.value,
       }
       const res = await axios.post(`${URL}/login-user`, user)
-      setUserInfo(res.data)
+      console.log(res)
+      //userValue.setUserInfo(res.data)
       verifyAuth()
       toast.success('Login Successfully')
 

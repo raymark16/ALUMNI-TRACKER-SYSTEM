@@ -81,13 +81,14 @@ const logout = async (req, res) => {
 const isLoggedIn = async (req, res) => {
     const token = req.cookies.access_token;
     if (!token) {
-        return res.json(false);
+        return res.json({loggedIn:false});
     }
-    return jwt.verify(token, process.env.JWT_SECRET, (err) => {
+    return jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
         if (err) {
-            return res.json(false);
+            return res.json({loggedIn:false});
         }
-        return res.json(true);
+        req.user = decoded
+        return res.json({loggedIn:true, userInfo: req.user});
     });
 };
 

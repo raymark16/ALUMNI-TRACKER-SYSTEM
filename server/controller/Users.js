@@ -2,25 +2,55 @@ const {Users} = require('../models')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
+const updateUser = async (req,res) => {
+    try {
+        const {firstname,lastname,email,phone,position,date_graduated,program,userEmail } = req.body
+        if(!firstname || !lastname || !email || !phone || !position || !date_graduated || !program || !userEmail ) return res.json({message:'All fields are required!'})
+        await Users.update({
+            firstname: firstname,
+            lastname: lastname,
+            email: email,
+            phone:phone,
+            position:position,
+            date_graduated:date_graduated,
+            program:program
+        }, {
+            where: {
+                email:userEmail
+            }
+        })
+        return res.json({ message: 'Created user' })
+    } catch (error) {
+        return res.json({message:'Error add User'})
+    }
+}
+
 const registerUser = async (req,res) => {
     try {
-        if (!req.body.username || !req.body.email || !req.body.password) {
+        const {email,password,firstname,lastname,phone,position,date_graduated,program,role} = req.body
+
+        if (!email || !password || !firstname || !lastname || !phone || !position || !date_graduated || !program || !role) {
             return res.send({ message: 'All fields are required' })
         }
 
         const userExist = await Users.findOne({ where: {
-            email: req.body.email
+            email: email
         } 
         })
         if (userExist) {
             return res.send({ message: 'Email already taken' })
         }
-        const hashedPassword = await bcrypt.hash(req.body.password, parseInt(process.env.SALT));
+        const hashedPassword = await bcrypt.hash(password, parseInt(process.env.SALT));
         await Users.create({
-            username: req.body.username,
-            email: req.body.email,
+            email: email,
             password: hashedPassword,
-            role:req.body.role
+            firstname: firstname,
+            lastname: lastname,
+            phone : phone,
+            position : position,
+            date_graduated : date_graduated,
+            program : program,
+            role : role
         })
 
         return res.status(201).json('New User Created');
@@ -51,8 +81,13 @@ const loginUser = async (req,res) => {
         }
         const payload = {
             id: user.id,
-            username: user.username,
             email: user.email,
+            firstname:user.firstname, 
+            lastname:user.lastname, 
+            phone:user.phone, 
+            position:user.position, 
+            date_graduated:user.date_graduated, 
+            program:user.program, 
             role: user.role
         };
         const token = jwt.sign(payload, process.env.JWT_SECRET, {
@@ -66,7 +101,7 @@ const loginUser = async (req,res) => {
                 //process.env.NODE_ENV === 'production'
             })
             .status(200)
-            .json({ username: user.username, email: user.email, role: user.role, message: 'login success' });
+            .json({ message: 'login success' });
     } catch (err) {
         console.log(err)
         throw new Error({ message: 'Login Error' })
@@ -91,10 +126,16 @@ const isLoggedIn = async (req, res) => {
         return res.json({loggedIn:true, userInfo: req.user});
     });
 };
+const getUsers = async (req, res) => {
+    const result = await Users.findAll({where: {role : '2'},attributes: ['id', 'email', 'firstname', 'lastname', 'phone', 'position', 'date_graduated', 'program', 'role']})
+    res.json({result})
+}
 
 module.exports = {
     registerUser,
     loginUser,
     logout,
-    isLoggedIn
+    isLoggedIn,
+    updateUser,
+    getUsers
 }

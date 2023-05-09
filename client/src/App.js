@@ -9,12 +9,13 @@ import AuthContext from './context/Auth';
 import PrivateRoutes from './components/PrivateRoutes';
 import Loading from './components/Loading';
 import ErrorPage from './components/ErrorPage';
-import axios from 'axios';
+import UpdateUser from './components/UpdateUser';
+import Layout from './components/Layout';
 export const URL = 'http://localhost:5000'
 
 
 function App() {
-  const { auth } = useContext(AuthContext);
+  const { auth, userInfo } = useContext(AuthContext);
   return (
     <>
     <Toaster
@@ -29,7 +30,9 @@ function App() {
       <Route path='/login' element={auth ? <Navigate to='/' /> : auth === undefined ? <Loading /> : <Login />}/>
       <Route path='/register' element={auth ? <Navigate to='/' /> : auth === undefined ? <Loading /> : <Register/>}/>
       <Route element={<PrivateRoutes/>}> 
-          <Route path='/' element={<MainPage />}/>
+          <Route element={<Layout/>}>
+            <Route path='/' element={userInfo?.role === '2' ? <UpdateUser /> : <MainPage />}/>
+          </Route>
       </Route>
       <Route path='*' element={<ErrorPage/>}/>
     </Routes>

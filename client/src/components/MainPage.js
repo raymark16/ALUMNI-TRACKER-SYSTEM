@@ -1,23 +1,37 @@
-import axios from "axios"
-import { URL } from "../App"
-import AuthContext from '../context/Auth';
-import toast from 'react-hot-toast'
-import { useContext } from "react";
-
+import TableUsers from "./TableUsers";
+import { useEffect,useState } from "react";
+import { URL } from '../App'
+import axios from "axios";
 
 const MainPage = () => {
-  const { verifyAuth, userInfo } = useContext(AuthContext);
+  const [users, setUsers] = useState([])
 
-  const Logout = async () => {
-    await axios.get(`${URL}/logout`)
-    verifyAuth()
-    toast.success('Logout successful')
-  }
+  useEffect(()=> {
+
+    const getUsers = async () => {
+
+      const result = await axios.get(`${URL}/get-users`)
+      result.data.result.map((e) => {
+        let resultObj = {
+          firstname: e.firstname,
+          lastname: e.lastname,
+          email: e.email,
+          phone: e.phone,
+          position: e.position,
+          date_graduated: e.date_graduated,
+          program: e.program,
+        }
+        setUsers(prevObj => [...prevObj, resultObj])
+    }
+    )
+
+    }
+    getUsers()
   
+  },[])
   return (
     <div>
-      <h1>Main page {userInfo.username}</h1>
-      <button onClick={Logout}>Logout</button>
+      <TableUsers users={users}/>
     </div>
   )
 }

@@ -8,22 +8,32 @@ const Register = () => {
   const navigate = useNavigate()
   const RegisterSubmit = async (e) => {
     e.preventDefault()
-    if(!e.target.username.value || !e.target.email.value || !e.target.password.value) {
+    if(!e.target.email.value || !e.target.password.value || !e.target.fname.value || !e.target.lname.value || !e.target.phone.value || !e.target.position.value || !e.target.program.value || !e.target.date.value ) {
       toast.error('All Fields Are Required')
       return 
     }
     try {
       const user = {
-        username: e.target.username.value,
         email: e.target.email.value,
         password: e.target.password.value,
+        firstname:e.target.fname.value,
+        lastname:e.target.lname.value,
+        phone:e.target.phone.value,
+        position:e.target.position.value,
+        date_graduated:e.target.date.value,
+        program:e.target.program.value,
         role:'2'
       }
       await axios.post(`${URL}/register-user`, user)
       toast.success('Register Success')
-      e.target.username.value = ''
       e.target.email.value = ''
       e.target.password.value = ''
+      e.target.fname.value = ''
+      e.target.lname.value = ''
+      e.target.phone.value = ''
+      e.target.position.value = ''
+      e.target.date.value = ''
+      e.target.program.value = ''
       navigate('/login')
     } catch (error) {
       toast.error('Register Failed')
@@ -37,9 +47,14 @@ const Register = () => {
                 <Link to='/login' ><h2 className='inactive underlineHover'>Sign In</h2></Link>
                 <Link to='/register' ><h2 className='active'>Sign Up</h2></Link>
                 <form onSubmit={RegisterSubmit}>
-                    <input type="text" id="username" autoComplete='off' required className="fadeIn second" name="username" placeholder="username"/>
-                    <input type="email" id="email" autoComplete='off' required className="fadeIn second" name="email" placeholder="email"/>
+                    <input type="email" id="email" autoComplete='off' required className="fadeIn second" name="email" placeholder="Email"/>
                     <input type="password" id="password" autoComplete='off' required className="fadeIn third" name="password" placeholder="password"/>
+                    <input type="text" id="fname" autoComplete='off' required className="fadeIn second" name="fname" placeholder="First Name"/>
+                    <input type="text" id="lname" autoComplete='off' required className="fadeIn second" name="lname" placeholder="Last Name"/>
+                    <input type="text" id="phone" autoComplete='off' required className="fadeIn third" name="phone" placeholder="phone"/>
+                    <input type="text" id="position" autoComplete='off' required className="fadeIn third" name="position" placeholder="Employee/Owner/Lawyer"/>
+                    <input type="text" id="program" autoComplete='off' required className="fadeIn third" name="program" placeholder="BSIT/BSCS"/>
+                    <input type="text" id="date" autoComplete='off' required className="fadeIn third" name="date" onFocus={(e) => e.target.type = 'date'} onBlur={(e) => e.target.type = 'text'} placeholder="Date Graduated"/>
                     <input type="submit" className="fadeIn fourth" value="Sign Up"/>
                 </form>
             

@@ -7,7 +7,6 @@ export function AuthProvider({ children }) {
     const [auth, setAuth] = useState(undefined);
     const [userInfo, setUserInfo] = useState({})
    // const userValue = useMemo(()=>({userInfo,setUserInfo}),[userInfo,setUserInfo])
-
     const verifyAuth = async () => {
         const res = await axios.get(`${URL}/is_logged_in`);
         setUserInfo(res.data.userInfo)

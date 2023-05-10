@@ -35,9 +35,11 @@ const Login = () => {
             <div id="formContent">
                 <Link to='/login' ><h2 className='active'>Sign In</h2></Link>
                 <Link to='/register' ><h2 className='inactive underlineHover'>Sign Up</h2></Link>
+                <p style={{visibility:'hidden'}}>wow</p>
                 <form onSubmit={LoginSubmit}>
                     <input type="email" id="email" autoComplete='off' required className="fadeIn second" name="email" placeholder="email"/>
                     <input type="password" id="password" autoComplete='off' required className="fadeIn third" name="password" placeholder="password"/>
+                    <p style={{visibility:'hidden'}}>wow</p>
                     <input type="submit" className="fadeIn fourth" value="Log In"/>
                 </form>
             

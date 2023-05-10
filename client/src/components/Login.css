@@ -41,7 +41,18 @@ h2 {
   width: 100%;
   min-height: 100%;
   padding: 20px;
-  height: 100vh;
+  height: 80vh;
+}
+
+.wrapper1 {
+  display: flex;
+  align-items: center;
+  flex-direction: column; 
+  justify-content: center;
+  width: 100%;
+  min-height: 100%;
+  padding: 20px;
+  height: 80vh;
 }
 
 #formContent {
@@ -56,6 +67,7 @@ h2 {
   -webkit-box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
   box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
   text-align: center;
+  background-color: rgba(0,0,0,0.8);
 }
 
 #formFooter {
@@ -76,7 +88,7 @@ h2 {
 }
 
 .active {
-  color: #0d0d0d;
+  color: white;
   border-bottom: 2px solid #5fbae9;
 }
 
@@ -124,7 +136,6 @@ input[type=text], input[type=password], input[type=email], input[type=date] {
   border: none;
   color: #0d0d0d;
   padding: 15px 32px;
-  text-align: center;
   text-decoration: none;
   display: inline-block;
   font-size: 16px;

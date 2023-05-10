@@ -36,8 +36,9 @@ const UpdateUser = () => {
   }
   return (
     <div>
-      <div className="wrapper fadeInDown">
-            <div id="formContent">
+      <div className="wrapper1 fadeInDown">
+        <h1>Update Information</h1>
+            <div id="formContent" className='pt-4'>
                 <form onSubmit={updateUserSubmit}>
                     <input type="text" id="fname" autoComplete='off' required className="fadeIn second" name="fname" placeholder="First Name"/>
                     <input type="text" id="lname" autoComplete='off' required className="fadeIn second" name="lname" placeholder="Last Name"/>

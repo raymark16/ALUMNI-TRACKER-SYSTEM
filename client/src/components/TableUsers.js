@@ -1,6 +1,18 @@
 import DataTable from 'react-data-table-component';
+import { useState } from 'react';
 
 const TableUsers = ({users}) => {
+    
+    const [searchInput, setSearchInput] = useState('')
+    const filteredList = users.filter(row =>
+        row.email.toLowerCase().includes(searchInput.toLowerCase()) ||
+        row.firstname.toLowerCase().includes(searchInput.toLowerCase()) ||
+        row.lastname.toLowerCase().includes(searchInput.toLowerCase()) ||
+        row.phone.toLowerCase().includes(searchInput.toLowerCase()) ||
+        row.position.toLowerCase().includes(searchInput.toLowerCase()) ||
+        row.date_graduated.toLowerCase().includes(searchInput.toLowerCase()) ||
+        row.program.toLowerCase().includes(searchInput.toLowerCase())
+        )
     const customStyles = {
 
         header: {
@@ -52,12 +64,14 @@ const TableUsers = ({users}) => {
             selector: row => row.program
         }
     ];
+
   return (
-    <div>
-        <h1>Table Data</h1>
+    <div className='m-5'>
+        <h1>Alumni Data</h1>
+        <div className='text-end mb-2'><input type='text'  className='w-25' autoComplete='off' value={searchInput} placeholder='Search' onChange={(e) => setSearchInput(e.target.value)}></input></div>
         <DataTable
                 columns={columns}
-                data={users}
+                data={filteredList}
                 pagination
                 fixedHeader
                 fixedHeaderScrollHeight='50vh'

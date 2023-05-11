@@ -24,10 +24,10 @@ ChartJS.register(
 );
 
 const MainPage = () => {
+  const [searchInput, setSearchInput] = useState('')
   const [users, setUsers] = useState([])
   const { verifyAuth, userInfo } = useContext(AuthContext);
-  const [program, setProgram] = useState('');
-  const [year, setYear] = useState('');
+  const [options, setOptions] = useState(['','']);
   const [userData, setUserData] = useState({});
   const [chartData, setChartData] = useState({
     labels: [],
@@ -39,6 +39,70 @@ const MainPage = () => {
       },
     ],
   })
+  const drawChartData = () => {
+    let labels = []
+    let values = []
+    let dataset_lbl = ''
+    
+    
+    if(options[1] != '' && options[0] == ''){
+      setSearchInput(options[1])
+      dataset_lbl = 'Students Graduated in ' + options[1]
+      Object.entries(userData).forEach((e) => {
+        const [k, v] = e
+        const matchingPrograms = v.programs.filter((x) => {return x == options[1]})
+        if(labels.includes(k.split('-')[0])){
+          let idx = labels.indexOf(k.split('-')[0])
+          values[idx] += matchingPrograms.length
+        }else{
+          labels.push(k.split('-')[0])
+          values.push(matchingPrograms.length)
+        }
+        
+      })
+    }
+
+    if(options[0] != '' && options[1] == ''){
+      setSearchInput(options[0])
+      dataset_lbl = 'Students Graduated in ' + options[0]
+      Object.entries(userData).forEach((e) => {
+        const [k, v] = e
+        if(k.includes(options[0])){
+          v.programs.forEach((z) => {
+            if (labels.includes(z)){
+              let idx = labels.indexOf(z)
+              values[idx] += 1
+            }else{
+              labels.push(z)
+              values.push(1)
+            }
+          })
+        }
+      })
+    }else if(options[0] == '' && options[1] == ''){
+      dataset_lbl = 'Students Graduated'
+      Object.entries(userData).forEach((e) => {
+        const [k, v] = e
+        if(labels.includes(k.split('-')[0])){
+          let idx = labels.indexOf(k.split('-')[0])
+          values[idx] += v.programs.length
+        }else{
+          labels.push(k.split('-')[0])
+          values.push(v.programs.length)
+        }
+      })
+    }
+    setChartData({
+      labels: labels,
+      datasets: [
+        {
+          label: dataset_lbl,
+          data: values,
+          backgroundColor: 'rgba(255, 99, 132, 0.5)',
+        },
+      ],
+    })
+  }
 
   useEffect(()=> {
     const getUsers = async () => {
@@ -53,61 +117,26 @@ const MainPage = () => {
           date_graduated: e.date_graduated,
           program: e.program,
         }
-        // if(labels.includes(e.date_graduated)){
-        //   let idx = labels.indexOf(e.date_graduated);
-        //   data_values[idx] += 1;
-        // }else{
+
         if (e.date_graduated in userData){
           userData[e.date_graduated]['programs'].push(e.program)
         }else{
           userData[e.date_graduated] = {programs: []}
           userData[e.date_graduated]['programs'].push(e.program)
         }
-        
-        // }
         setUsers(prevObj => [...prevObj, resultObj])
       })
 
     }
+    setTimeout(() => {
+      drawChartData()
+    }, 1);
     getUsers()
   }, [])
 
   useEffect(() => {
-    let labels = []
-    let values = []
-
-    if(year != ''){
-      Object.entries(userData).forEach((e) => {
-        const [k, v] = e
-        if(k.includes(year)){
-          v.programs.forEach((z) => {
-            if (labels.includes(z)){
-              let idx = labels.indexOf(z)
-              values[idx] += 1
-            }else{
-              labels.push(z)
-              values.push(1)
-            }
-          })
-        }else{
-
-        }
-      })
-    }
-    console.log(labels)
-    console.log(values)
-    setChartData({
-      labels: labels,
-      datasets: [
-        {
-          label: year,
-          data: values,
-          backgroundColor: 'rgba(255, 99, 132, 0.5)',
-        },
-      ],
-    })
-    
-    }, [program, year])
+    drawChartData()
+    }, [options])
 
   return (
     <div>
@@ -117,11 +146,11 @@ const MainPage = () => {
             Program
           </button>
           <div className="dropdown-menu">
-            <button className="dropdown-item" onClick={() => setProgram('bsit')}>bsit</button>
-            <button className="dropdown-item" onClick={() => setProgram('bscs')}>bscs</button>
-            <button className="dropdown-item" onClick={() => setProgram('bsed')}>bsed</button>
+            <button className="dropdown-item" onClick={() => setOptions(['','bstm'])}>bstm</button>
+            <button className="dropdown-item" onClick={() => setOptions(['','bscs'])}>bscs</button>
+            <button className="dropdown-item" onClick={() => setOptions(['','bsed'])}>bsed</button>
             <div className="dropdown-divider"></div>
-            <button className="dropdown-item" onClick={() => setProgram('')}>show all</button>
+            <button id='program_all' className="dropdown-item" onClick={() => setOptions(['',''])}>show all</button>
           </div>
         </div>
         <div className="btn-group">
@@ -129,11 +158,11 @@ const MainPage = () => {
             Year
           </button>
           <div className="dropdown-menu">
-            <button className="dropdown-item" onClick={() => setYear('2023')}>2023</button>
-            <button className="dropdown-item" onClick={() => setYear('2021')}>2021</button>
-            <button className="dropdown-item" onClick={() => setYear('2020')}>2020</button>
+            <button className="dropdown-item" onClick={() => setOptions(['2023',''])}>2023</button>
+            <button className="dropdown-item" onClick={() => setOptions(['2021',''])}>2021</button>
+            <button className="dropdown-item" onClick={() => setOptions(['2020',''])}>2020</button>
             <div className="dropdown-divider"></div>
-            <button className="dropdown-item" onClick={() => setYear('')}>show all</button>
+            <button id='year_all' className="dropdown-item" onClick={() => setOptions(['',''])}>show all</button>
           </div>
         </div>
         <Bar 
@@ -153,7 +182,7 @@ const MainPage = () => {
         width={'500px'} 
         height={'500px'} />
       </div>
-      <TableUsers users={users}/>
+      <TableUsers users={users} searchInput={searchInput} setSearchInput={setSearchInput}/>
     </div>
   )
 }

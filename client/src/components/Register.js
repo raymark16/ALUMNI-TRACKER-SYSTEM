@@ -43,17 +43,25 @@ const Register = () => {
   return (
     <div>
         <div className="wrapper fadeInDown">
+        <div className="alumni mb-5">
+            <span className='spanA'>A</span>
+            <span className='spanL'>L</span>
+            <span className='spanU'>U</span>
+            <span className='spanM'>M</span>
+            <span className='spanN'>N</span>
+            <span className='spanI'>I</span>
+          </div>
             <div id="formContent">
                 <Link to='/login' ><h2 className='inactive underlineHover'>Sign In</h2></Link>
                 <Link to='/register' ><h2 className='active'>Sign Up</h2></Link>
                 <form onSubmit={RegisterSubmit}>
                     <input type="email" id="email" autoComplete='off' required className="fadeIn second" name="email" placeholder="Email"/>
-                    <input type="password" id="password" autoComplete='off' required className="fadeIn third" name="password" placeholder="password"/>
+                    <input type="password" id="password" autoComplete='off' required className="fadeIn third" name="password" placeholder="Password"/>
                     <input type="text" id="fname" autoComplete='off' required className="fadeIn second" name="fname" placeholder="First Name"/>
                     <input type="text" id="lname" autoComplete='off' required className="fadeIn second" name="lname" placeholder="Last Name"/>
-                    <input type="text" id="phone" autoComplete='off' required className="fadeIn third" name="phone" placeholder="phone"/>
-                    <input type="text" id="position" autoComplete='off' required className="fadeIn third" name="position" placeholder="Employee/Owner/Lawyer"/>
-                    <input type="text" id="program" autoComplete='off' required className="fadeIn third" name="program" placeholder="BSIT/BSCS"/>
+                    <input type="text" id="phone" autoComplete='off' required className="fadeIn third" name="phone" placeholder="Phone"/>
+                    <input type="text" id="position" autoComplete='off' required className="fadeIn third" name="position" placeholder="Position: ex.Employee/Owner/Lawyer"/>
+                    <input type="text" id="program" autoComplete='off' required className="fadeIn third" name="program" placeholder="Program: ex.BSIT/BSCS"/>
                     <input type="text" id="date" autoComplete='off' required className="fadeIn third" name="date" onFocus={(e) => e.target.type = 'date'} onBlur={(e) => e.target.type = 'text'} placeholder="Date Graduated"/>
                     <input type="submit" className="fadeIn fourth" value="Sign Up"/>
                 </form>

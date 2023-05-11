@@ -23,7 +23,7 @@ ChartJS.register(
   Legend
 );
 
-const MainPage = () => {
+const MainPage = ({forceRender}) => {
   const [searchInput, setSearchInput] = useState('')
   const [users, setUsers] = useState([])
   const { verifyAuth, userInfo } = useContext(AuthContext);
@@ -43,7 +43,6 @@ const MainPage = () => {
     let labels = []
     let values = []
     let dataset_lbl = ''
-    
     
     if(options[1] != '' && options[0] == ''){
       setSearchInput(options[1])
@@ -103,10 +102,10 @@ const MainPage = () => {
       ],
     })
   }
-
   useEffect(()=> {
+    const controller = new AbortController();
     const getUsers = async () => {
-      const result = await axios.get(`${URL}/get-users`)
+      const result = await axios.get(`${URL}/get-users`, {signal: controller.signal})
       result.data.result.forEach((e) => {
         let resultObj = {
           firstname: e.firstname,
@@ -117,13 +116,14 @@ const MainPage = () => {
           date_graduated: e.date_graduated,
           program: e.program,
         }
-
         if (e.date_graduated in userData){
           userData[e.date_graduated]['programs'].push(e.program)
         }else{
           userData[e.date_graduated] = {programs: []}
           userData[e.date_graduated]['programs'].push(e.program)
         }
+        
+        // }
         setUsers(prevObj => [...prevObj, resultObj])
       })
 
@@ -132,59 +132,63 @@ const MainPage = () => {
       drawChartData()
     }, 1);
     getUsers()
-  }, [])
-
+    return () => {
+      controller.abort()
+    }
+  }, [forceRender])
+  
   useEffect(() => {
     drawChartData()
     }, [options])
+ 
 
-  return (
-    <div>
-      <div id='bar_chart' style={{display: userInfo.role == 1 ? 'block' : 'none' }}>
-        <div className="btn-group">
-          <button type="button" className="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Program
-          </button>
-          <div className="dropdown-menu">
-            <button className="dropdown-item" onClick={() => setOptions(['','bstm'])}>bstm</button>
-            <button className="dropdown-item" onClick={() => setOptions(['','bscs'])}>bscs</button>
-            <button className="dropdown-item" onClick={() => setOptions(['','bsed'])}>bsed</button>
-            <div className="dropdown-divider"></div>
-            <button id='program_all' className="dropdown-item" onClick={() => setOptions(['',''])}>show all</button>
+    return (
+      <div style={{padding:'30px'}}>
+        <div id='bar_chart' style={{display: userInfo.role == 1 ? 'block' : 'none' }}>
+          <div className="btn-group">
+            <button type="button" className="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Program
+            </button>
+            <div className="dropdown-menu">
+              <button className="dropdown-item" onClick={() => setOptions(['','bstm'])}>bstm</button>
+              <button className="dropdown-item" onClick={() => setOptions(['','bscs'])}>bscs</button>
+              <button className="dropdown-item" onClick={() => setOptions(['','bsed'])}>bsed</button>
+              <div className="dropdown-divider"></div>
+              <button id='program_all' className="dropdown-item" onClick={() => setOptions(['',''])}>show all</button>
+            </div>
           </div>
-        </div>
-        <div className="btn-group">
-          <button type="button" className="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Year
-          </button>
-          <div className="dropdown-menu">
-            <button className="dropdown-item" onClick={() => setOptions(['2023',''])}>2023</button>
-            <button className="dropdown-item" onClick={() => setOptions(['2021',''])}>2021</button>
-            <button className="dropdown-item" onClick={() => setOptions(['2020',''])}>2020</button>
-            <div className="dropdown-divider"></div>
-            <button id='year_all' className="dropdown-item" onClick={() => setOptions(['',''])}>show all</button>
+          <div className="btn-group">
+            <button type="button" className="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Year
+            </button>
+            <div className="dropdown-menu">
+              <button className="dropdown-item" onClick={() => setOptions(['2023',''])}>2023</button>
+              <button className="dropdown-item" onClick={() => setOptions(['2021',''])}>2021</button>
+              <button className="dropdown-item" onClick={() => setOptions(['2020',''])}>2020</button>
+              <div className="dropdown-divider"></div>
+              <button id='year_all' className="dropdown-item" onClick={() => setOptions(['',''])}>show all</button>
+            </div>
           </div>
+          <Bar 
+          options = {{
+            responsive: false,
+            plugins: {
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: 'Chart.js Bar Chart',
+              },
+            },
+          }} 
+          data={chartData} 
+          width={'500px'} 
+          height={'500px'} />
         </div>
-        <Bar 
-        options = {{
-          responsive: false,
-          plugins: {
-            legend: {
-              position: 'top',
-            },
-            title: {
-              display: true,
-              text: 'Chart.js Bar Chart',
-            },
-          },
-        }} 
-        data={chartData} 
-        width={'500px'} 
-        height={'500px'} />
+        <TableUsers users={users} searchInput={searchInput} setSearchInput={setSearchInput}/>
       </div>
-      <TableUsers users={users} searchInput={searchInput} setSearchInput={setSearchInput}/>
-    </div>
-  )
-}
+    )
+  }
 
 export default MainPage

@@ -2,6 +2,7 @@ import DataTable from 'react-data-table-component';
 import { useState } from 'react';
 
 const TableUsers = ({users, searchInput, setSearchInput}) => {
+    
     const filteredList = users.filter(row =>
         row.email.toLowerCase().includes(searchInput.toLowerCase()) ||
         row.firstname.toLowerCase().includes(searchInput.toLowerCase()) ||
@@ -64,9 +65,9 @@ const TableUsers = ({users, searchInput, setSearchInput}) => {
     ];
 
   return (
-    <div className='m-5'>
+    <div className='mb-5'>
         <h1>Alumni Data</h1>
-        <div className='text-end mb-2'><input type='text' id='search_bar' className='w-25' autoComplete='off' value={searchInput} placeholder='Search' onChange={(e) => setSearchInput(e.target.value)}></input></div>
+        <div className='text-end mb-2'><input type='text'  className='w-25' autoComplete='off' value={searchInput} placeholder='Search' onChange={(e) => setSearchInput(e.target.value)}></input></div>
         <DataTable
                 columns={columns}
                 data={filteredList}

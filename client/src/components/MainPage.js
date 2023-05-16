@@ -1,7 +1,9 @@
 import TableUsers from "./TableUsers";
 import AuthContext from '../context/Auth';
+import {Typography} from 'antd'
 import { useEffect, useState, useContext } from "react";
 import { URL } from '../App'
+import { UserOutlined,PieChartOutlined } from '@ant-design/icons'
 import axios from "axios";
 import {
   Chart as ChartJS,
@@ -69,6 +71,7 @@ const MainPage = ({forceRender}) => {
 
   const getUsers = async () => {
     const result = await axios.get(`${URL}/get-users`)
+    
     result.data.result.forEach((e) => {
       let resultObj = {
         firstname: e.firstname,
@@ -172,11 +175,36 @@ const MainPage = ({forceRender}) => {
   useEffect(() => {
     drawChartData()
     }, [options])
- 
+    
+    const userProgram1 = users?.map((e)=> e.program)
+    const userProgram = userProgram1?.filter((item,
+      index) => userProgram1.indexOf(item) === index);
     return (
       <div style={{padding:'30px'}}>
-        <div id='bar_chart' style={{display: userInfo.role == 1 ? 'block' : 'none' }}>
-          <div className="btn-group">
+        <div className="ms-5">
+        <Typography.Title level={3}>Dashboard</Typography.Title>
+        <div className="d-flex me-5">
+        <div className="rounded pt-4 pb-4 me-3" style={{marginBottom:5, display:'flex',width:'20%', justifyContent:'space-evenly', background: `linear-gradient(90deg, rgba(0,249,229,1) 0%, rgba(0,173,208,1) 100%)`}}>
+              <UserOutlined style={{color:'white',fontSize:50,padding:8, marginBottom:'5px'}}/>
+              <div className="d-flex flex-column justify-content-center align-items-center">
+              <h3 style={{color:'white'}}>Users</h3>
+              <h4 level={4} style={{color:'white'}}>{users?.length}</h4>
+              </div>
+        </div>
+        
+        <div className="rounded pt-4 pb-4" style={{marginBottom:5, display:'flex',width:'20%', justifyContent:'space-evenly', background: `linear-gradient(90deg, rgba(204,7,143,1) 0%, rgba(255,5,68,1) 100%)`}}>
+              <PieChartOutlined  style={{color:'white',fontSize:50,padding:8, marginBottom:'5px'}}/>
+              <div className="d-flex flex-column justify-content-center align-items-center">
+              <h3 style={{color:'white'}}>Programs</h3>
+              <h4 level={4} style={{color:'white'}}>{userProgram?.length}</h4>
+              </div>
+        </div>
+
+        </div>
+        </div>
+        <div className="d-flex justify-content-around pt-4 pb-5" >
+        <div id='bar_chart' style={{display: userInfo.role == 1 ? 'block' : 'none', backgroundColor:'white' }} className="shadow rounded mb-5 p-5">
+          <div className="btn-group mb-2 pe-3">
             <button type="button" className="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Program
             </button>
@@ -185,7 +213,7 @@ const MainPage = ({forceRender}) => {
               <div className="dropdown-divider"></div>
             </div>
           </div>
-          <div className="btn-group">
+          <div className="btn-group mb-2">
             <button type="button" className="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Year
             </button>
@@ -194,6 +222,8 @@ const MainPage = ({forceRender}) => {
               <div className="dropdown-divider"></div>
             </div>
           </div>
+          <hr></hr>
+          <div className="p-5">
           <Bar 
           options = {{
             responsive: false,
@@ -210,8 +240,10 @@ const MainPage = ({forceRender}) => {
           data={chartData} 
           width={'500px'} 
           height={'500px'} />
+          </div>
         </div><br></br>
         <TableUsers users={users} searchInput={searchInput} setSearchInput={setSearchInput}/>
+        </div>
       </div>
     )
   }

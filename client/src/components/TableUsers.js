@@ -17,7 +17,11 @@ const TableUsers = ({users, searchInput, setSearchInput}) => {
             textOverflow: 'clip', whiteSpace: 'normal'
         },
         table: {
-            textOverflow: 'clip', whiteSpace: 'normal'
+            textOverflow: 'clip', whiteSpace: 'normal',
+            style: {
+                width:'50vw',
+                height:'50vh'
+            },
         },
         header: {
             style: {
@@ -70,7 +74,7 @@ const TableUsers = ({users, searchInput, setSearchInput}) => {
     ];
 
   return (
-    <div className='mb-5'>
+    <div className='mb-5 shadow rounded p-5' style={{backgroundColor:'white'}}>
         <h1>Alumni Data</h1>
         <div className='text-end mb-2'><input type='text'  className='w-25' autoComplete='off' value={searchInput} placeholder='Search' onChange={(e) => setSearchInput(e.target.value)}></input></div>
         <DataTable

@@ -3,7 +3,7 @@ import Header from "./Header"
 import Footer from "./Footer"
 const Layout = () => {
   return (
-    <div>
+    <div style={{backgroundColor: 'rgba(235, 235, 235, 0.4)'}}>
         <Header/>
         <>
         <Outlet/>

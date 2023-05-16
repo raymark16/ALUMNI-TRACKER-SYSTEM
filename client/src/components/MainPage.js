@@ -70,6 +70,7 @@ const MainPage = ({forceRender}) => {
   const getUsers = async () => {
     const result = await axios.get(`${URL}/get-users`)
     result.data.result.forEach((e) => {
+      console.log(e.Program.name)
       let resultObj = {
         firstname: e.firstname,
         lastname: e.lastname,

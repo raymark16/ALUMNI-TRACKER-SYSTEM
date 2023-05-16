@@ -6,7 +6,9 @@ import {URL} from '../App'
 import toast from 'react-hot-toast'
 const Register = () => {
   const navigate = useNavigate()
-  
+
+  var programs = {}
+
   const getPrograms = async () => {
     const result = await axios.get(`${URL}/get-programs`)
     result.data.result.forEach((e) => {
@@ -15,7 +17,7 @@ const Register = () => {
       temp_btn.id = e.program
       temp_btn.textContent = e.name
       document.getElementById('program_list').appendChild(temp_btn)
-      console.log(e)
+      programs[e.name] = e.program
     })
   }
 
@@ -23,7 +25,7 @@ const Register = () => {
 
   const RegisterSubmit = async (e) => {
     e.preventDefault()
-    if(!e.target.email.value || !e.target.password.value || !e.target.fname.value || !e.target.lname.value || !e.target.phone.value || !e.target.position.value || !e.target.program.value || !e.target.date.value || e.target.program.value == '--') {
+    if(!e.target.email.value || !e.target.password.value || !e.target.fname.value || !e.target.lname.value || !e.target.phone.value || !e.target.position.value || !e.target.program.value || !e.target.date.value || e.target.program.value == 'Program: --') {
       toast.error('All Fields Are Required')
       return 
     }
@@ -36,7 +38,7 @@ const Register = () => {
         phone:e.target.phone.value,
         position:e.target.position.value,
         date_graduated:e.target.date.value,
-        program:e.target.program.value,
+        program:programs[e.target.program.value],
         role:'2'
       }
       await axios.post(`${URL}/register-user`, user)

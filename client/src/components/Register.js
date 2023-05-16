@@ -6,9 +6,24 @@ import {URL} from '../App'
 import toast from 'react-hot-toast'
 const Register = () => {
   const navigate = useNavigate()
+  
+  const getPrograms = async () => {
+    const result = await axios.get(`${URL}/get-programs`)
+    result.data.result.forEach((e) => {
+      let temp_btn = document.createElement('option')
+      temp_btn.className = 'dropdown-item'
+      temp_btn.id = e.program
+      temp_btn.textContent = e.name
+      document.getElementById('program_list').appendChild(temp_btn)
+      console.log(e)
+    })
+  }
+
+  getPrograms()
+
   const RegisterSubmit = async (e) => {
     e.preventDefault()
-    if(!e.target.email.value || !e.target.password.value || !e.target.fname.value || !e.target.lname.value || !e.target.phone.value || !e.target.position.value || !e.target.program.value || !e.target.date.value ) {
+    if(!e.target.email.value || !e.target.password.value || !e.target.fname.value || !e.target.lname.value || !e.target.phone.value || !e.target.position.value || !e.target.program.value || !e.target.date.value || e.target.program.value == '--') {
       toast.error('All Fields Are Required')
       return 
     }
@@ -61,7 +76,7 @@ const Register = () => {
                     <input type="text" id="lname" autoComplete='off' required className="fadeIn second" name="lname" placeholder="Last Name"/>
                     <input type="text" id="phone" autoComplete='off' required className="fadeIn third" name="phone" placeholder="Phone"/>
                     <input type="text" id="position" autoComplete='off' required className="fadeIn third" name="position" placeholder="Position: ex.Employee/Owner/Lawyer"/>
-                    <input type="text" id="program" autoComplete='off' required className="fadeIn third" name="program" placeholder="Program: ex.BSIT/BSCS"/>
+                    <div className='program_list'> <select required className="fadeIn third" id='program_list' name="program"><option>Program: --</option></select></div>
                     <input type="text" id="date" autoComplete='off' required className="fadeIn third" name="date" onFocus={(e) => e.target.type = 'date'} onBlur={(e) => e.target.type = 'text'} placeholder="Date Graduated"/>
                     <input type="submit" className="fadeIn fourth" value="Sign Up"/>
                 </form>

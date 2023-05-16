@@ -13,7 +13,12 @@ const TableUsers = ({users, searchInput, setSearchInput}) => {
         row.program.toLowerCase().includes(searchInput.toLowerCase())
         )
     const customStyles = {
-
+        cell: {
+            textOverflow: 'clip', whiteSpace: 'normal'
+        },
+        table: {
+            textOverflow: 'clip', whiteSpace: 'normal'
+        },
         header: {
             style: {
                 fontSize: '3rem'

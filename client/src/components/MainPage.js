@@ -22,6 +22,7 @@ ChartJS.register(
   Tooltip,
   Legend
 );
+var _ = require('lodash');
 
 const MainPage = ({forceRender}) => {
   const [searchInput, setSearchInput] = useState('')
@@ -39,36 +40,86 @@ const MainPage = ({forceRender}) => {
       },
     ],
   })
+
+  let current_year = parseInt(new Date().getFullYear()) + 1;
+
+  const getPrograms = async () => {
+    const result = await axios.get(`${URL}/get-programs`)
+    result.data.result.forEach((e) => {
+      let temp_btn = document.createElement('button')
+      temp_btn.className = 'dropdown-item'
+      temp_btn.addEventListener('click', () => {setOptions(['', String(e.name)])})
+      temp_btn.id = e.program
+      temp_btn.textContent = e.name
+      document.getElementById('program_list').appendChild(temp_btn)
+    })
+
+    let year_list =  _.range(2010, current_year, 1).map((e) => {return String(e)})
+    year_list = _.reverse(year_list)
+    year_list.forEach((e) => {
+      let temp_btn = document.createElement('button')
+      temp_btn.className = 'dropdown-item'
+      temp_btn.addEventListener('click', () => {setOptions([String(e), ''])})
+      temp_btn.id = e
+      temp_btn.textContent = e
+      document.getElementById('year_list').appendChild(temp_btn)
+    })
+    const children = document.getElementsByClassName('dropdown-item')
+  }
+
+  const getUsers = async () => {
+    const result = await axios.get(`${URL}/get-users`)
+    result.data.result.forEach((e) => {
+      let resultObj = {
+        firstname: e.firstname,
+        lastname: e.lastname,
+        email: e.email,
+        phone: e.phone,
+        position: e.position,
+        date_graduated: e.date_graduated,
+        program: e.Program.name,
+      }
+      let year = parseInt(e.date_graduated.split('-')[0])
+      if (year in userData){
+        userData[year]['programs'].push(e.Program.name)
+      }else{
+        userData[year] = {programs: []}
+        userData[year]['programs'].push(e.Program.name)
+      }
+      setUsers(prevObj => [...prevObj, resultObj])
+    })
+  }
+
   const drawChartData = () => {
     let labels = []
     let values = []
     let dataset_lbl = ''
-    
+
     if(options[1] != '' && options[0] == ''){
-      setSearchInput(options[1])
-      dataset_lbl = 'Students Graduated in ' + options[1]
+      labels =  _.range(2010, current_year, 1).map((e) => {return String(e)})
+      values.length = labels.length
+      values.fill(0)
+      
       Object.entries(userData).forEach((e) => {
         const [k, v] = e
-        const matchingPrograms = v.programs.filter((x) => {return x == options[1]})
-        if(labels.includes(k.split('-')[0])){
-          let idx = labels.indexOf(k.split('-')[0])
+        const matchingPrograms = v.programs.filter((e) => {return e == options[1]})
+        setSearchInput(options[1])
+        if(labels.includes(k)){
+          let idx = labels.indexOf(k)
           values[idx] += matchingPrograms.length
         }else{
-          labels.push(k.split('-')[0])
-          values.push(matchingPrograms.length)
+          labels.push(k)
+          values.push(v.programs.length)
         }
-        
       })
-    }
-
-    if(options[0] != '' && options[1] == ''){
-      setSearchInput(options[0])
-      dataset_lbl = 'Students Graduated in ' + options[0]
+    }else if (options[1] == '' && options[0] != ''){
       Object.entries(userData).forEach((e) => {
         const [k, v] = e
-        if(k.includes(options[0])){
+        setSearchInput(options[0])
+        if (k == options[0]){
+          console.log(v)
           v.programs.forEach((z) => {
-            if (labels.includes(z)){
+            if(labels.includes(z)){
               let idx = labels.indexOf(z)
               values[idx] += 1
             }else{
@@ -78,19 +129,23 @@ const MainPage = ({forceRender}) => {
           })
         }
       })
-    }else if(options[0] == '' && options[1] == ''){
-      dataset_lbl = 'Students Graduated'
+    }else{
+      labels =  _.range(2010, current_year, 1).map((e) => {return String(e)})
+      values.length = labels.length
+      values.fill(0)
       Object.entries(userData).forEach((e) => {
         const [k, v] = e
-        if(labels.includes(k.split('-')[0])){
-          let idx = labels.indexOf(k.split('-')[0])
+        setSearchInput(options[0])
+        if (labels.includes(k)){
+          let idx = labels.indexOf(k)
           values[idx] += v.programs.length
         }else{
-          labels.push(k.split('-')[0])
+          labels.push(k)
           values.push(v.programs.length)
         }
       })
     }
+
     setChartData({
       labels: labels,
       datasets: [
@@ -104,33 +159,10 @@ const MainPage = ({forceRender}) => {
   }
   useEffect(()=> {
     const controller = new AbortController();
-    const getUsers = async () => {
-      const result = await axios.get(`${URL}/get-users`, {signal: controller.signal})
-      result.data.result.forEach((e) => {
-        let resultObj = {
-          firstname: e.firstname,
-          lastname: e.lastname,
-          email: e.email,
-          phone: e.phone,
-          position: e.position,
-          date_graduated: e.date_graduated,
-          program: e.program,
-        }
-        if (e.date_graduated in userData){
-          userData[e.date_graduated]['programs'].push(e.program)
-        }else{
-          userData[e.date_graduated] = {programs: []}
-          userData[e.date_graduated]['programs'].push(e.program)
-        }
-        
-        // }
-        setUsers(prevObj => [...prevObj, resultObj])
-      })
-
-    }
+    getPrograms()
     setTimeout(() => {
       drawChartData()
-    }, 1);
+    }, 1000);
     getUsers()
     return () => {
       controller.abort()
@@ -141,7 +173,6 @@ const MainPage = ({forceRender}) => {
     drawChartData()
     }, [options])
  
-
     return (
       <div style={{padding:'30px'}}>
         <div id='bar_chart' style={{display: userInfo.role == 1 ? 'block' : 'none' }}>
@@ -149,24 +180,18 @@ const MainPage = ({forceRender}) => {
             <button type="button" className="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Program
             </button>
-            <div className="dropdown-menu">
-              <button className="dropdown-item" onClick={() => setOptions(['','bstm'])}>bstm</button>
-              <button className="dropdown-item" onClick={() => setOptions(['','bscs'])}>bscs</button>
-              <button className="dropdown-item" onClick={() => setOptions(['','bsed'])}>bsed</button>
+            <div className="dropdown-menu" id='program_list' style={{maxHeight: '280px', overflowY: 'auto'}}>
+              <button id='year_all' className="dropdown-item" onClick={() => setOptions(['', ''])}>Show All</button>
               <div className="dropdown-divider"></div>
-              <button id='program_all' className="dropdown-item" onClick={() => setOptions(['',''])}>show all</button>
             </div>
           </div>
           <div className="btn-group">
             <button type="button" className="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Year
             </button>
-            <div className="dropdown-menu">
-              <button className="dropdown-item" onClick={() => setOptions(['2023',''])}>2023</button>
-              <button className="dropdown-item" onClick={() => setOptions(['2021',''])}>2021</button>
-              <button className="dropdown-item" onClick={() => setOptions(['2020',''])}>2020</button>
+            <div className="dropdown-menu" id='year_list' style={{maxHeight: '280px', overflowY: 'auto'}}>
+              <button id='year_all' className="dropdown-item" onClick={() => setOptions(['', ''])}>Show All</button>
               <div className="dropdown-divider"></div>
-              <button id='year_all' className="dropdown-item" onClick={() => setOptions(['',''])}>show all</button>
             </div>
           </div>
           <Bar 
@@ -185,7 +210,7 @@ const MainPage = ({forceRender}) => {
           data={chartData} 
           width={'500px'} 
           height={'500px'} />
-        </div>
+        </div><br></br>
         <TableUsers users={users} searchInput={searchInput} setSearchInput={setSearchInput}/>
       </div>
     )

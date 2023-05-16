@@ -127,7 +127,7 @@ input[type=button]:active, input[type=submit]:active, input[type=reset]:active  
   transform: scale(0.95);
 }
 
-input[type=text], input[type=password], input[type=email], input[type=date] {
+input[type=text], input[type=password], input[type=email], input[type=date], select {
   background-color: #f6f6f6;
   border: none;
   color: #0d0d0d;
@@ -145,6 +145,10 @@ input[type=text], input[type=password], input[type=email], input[type=date] {
   transition: all 0.5s ease-in-out;
   -webkit-border-radius: 5px 5px 5px 5px;
   border-radius: 5px 5px 5px 5px;
+}
+
+.program_list {
+  margin: 5px 0px 5px 0px;
 }
 
 input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, input[type=date]:focus{

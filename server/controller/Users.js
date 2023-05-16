@@ -1,4 +1,4 @@
-const {Users} = require('../models')
+const {Users, Programs} = require('../models')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
@@ -127,7 +127,19 @@ const isLoggedIn = async (req, res) => {
     });
 };
 const getUsers = async (req, res) => {
-    const result = await Users.findAll({where: {role : '2'},attributes: ['id', 'email', 'firstname', 'lastname', 'phone', 'position', 'date_graduated', 'program', 'role']})
+    Users.hasOne(Programs, {foreignKey : 'program', sourceKey: 'program'});
+    Programs.belongsTo(Users, {foreignKey : 'program', targetKey: 'program'});
+    const result = await Users.findAll({where: {role : '2'}, attributes: ['id', 'email', 'firstname', 'lastname', 'phone', 'position', 'date_graduated', 'program', 'role'], 
+                                        include: [{
+                                            model: Programs,
+                                            required: false,
+                                            attributes: ['name']
+}]})
+    res.json({result})
+}
+
+const getPrograms = async (req, res) => {
+    const result = await Programs.findAll({attributes: ['program', 'name']})
     res.json({result})
 }
 
@@ -137,5 +149,7 @@ module.exports = {
     logout,
     isLoggedIn,
     updateUser,
-    getUsers
+    getUsers,
+    getPrograms
 }
+

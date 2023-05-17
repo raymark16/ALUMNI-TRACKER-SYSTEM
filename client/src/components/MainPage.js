@@ -73,7 +73,7 @@ const MainPage = ({forceRender}) => {
     const result = await axios.get(`${URL}/get-users`)
     
     result.data.result.forEach((e) => {
-      console.log(e.Program.name)
+
       let resultObj = {
         firstname: e.firstname,
         lastname: e.lastname,
@@ -121,7 +121,7 @@ const MainPage = ({forceRender}) => {
         const [k, v] = e
         setSearchInput(options[0])
         if (k == options[0]){
-          console.log(v)
+
           v.programs.forEach((z) => {
             if(labels.includes(z)){
               let idx = labels.indexOf(z)

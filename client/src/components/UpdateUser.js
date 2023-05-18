@@ -7,10 +7,25 @@ import { useContext } from "react";
 import AuthContext from '../context/Auth';
 const UpdateUser = ({setForceRender}) => {
   const { userInfo, verifyAuth } = useContext(AuthContext);
+  var programs = {}
+
+  const getPrograms = async () => {
+    const result = await axios.get(`${URL}/get-programs`)
+    result.data.result.forEach((e) => {
+      let temp_btn = document.createElement('option')
+      temp_btn.className = 'dropdown-item'
+      temp_btn.id = e.program
+      temp_btn.textContent = e.name
+      document.getElementById('program_list').appendChild(temp_btn)
+      programs[e.name] = e.program
+    })
+  }
+
+  getPrograms()
   
   const updateUserSubmit = async (e) => {
     e.preventDefault()
-    if(!e.target.fname.value || !e.target.lname.value || !e.target.email.value || !e.target.phone.value || !e.target.position.value || !e.target.program.value || !e.target.date.value ) {
+    if(!e.target.fname.value || !e.target.lname.value || !e.target.email.value || !e.target.phone.value || !e.target.position.value || !e.target.program.value || !e.target.date.value || e.target.program.value == 'Program: --') {
       toast.error('All Fields Are Required')
       return 
     }
@@ -22,7 +37,7 @@ const UpdateUser = ({setForceRender}) => {
         phone:e.target.phone.value,
         position:e.target.position.value,
         date_graduated:e.target.date.value,
-        program:e.target.program.value,
+        program:programs[e.target.program.value],
         userEmail: userInfo.email
       }
       await axios.patch(`${URL}/update-user`, userDataObj)
@@ -47,7 +62,7 @@ const UpdateUser = ({setForceRender}) => {
                     <input type="email" id="email" autoComplete='off' required className="fadeIn third" name="email" placeholder="Email"/>
                     <input type="text" id="phone" autoComplete='off' required className="fadeIn third" name="phone" placeholder="Phone"/>
                     <input type="text" id="position" autoComplete='off' required className="fadeIn third" name="position" placeholder="Position: ex.Employee/Owner/Lawyer"/>
-                    <input type="text" id="program" autoComplete='off' required className="fadeIn third" name="program" placeholder="Program: ex.BSIT/BSCS"/>
+                    <div className='program_list'> <select required className="fadeIn third" id='program_list' name="program"><option>Program: --</option></select></div>
                     <input type="text" id="date" autoComplete='off' required className="fadeIn third" name="date" onFocus={(e) => e.target.type = 'date'} onBlur={(e) => e.target.type = 'text'} placeholder="Date Graduated"/>
                     <input type="submit" className="fadeIn fourth" value="Submit"/>
                 </form>

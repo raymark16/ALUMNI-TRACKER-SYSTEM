@@ -71,6 +71,7 @@ const UpdateUser = ({setForceRender}) => {
                     <input type="text" id="phone" autoComplete='off' required className="fadeIn third" name="phone" placeholder="Phone"/>
                     <input type="text" id="position" autoComplete='off' required className="fadeIn third" name="position" placeholder="Position: ex.Employee/Owner/Lawyer"/>
                     <div className='program_list'> <select required className="fadeIn third" id='program_list' name="program"><option>Program: --</option></select></div>
+                    <div className='program_list'> <select required className="fadeIn third" id='program_list' name="program"><option>Program: --</option></select></div>
                     <input type="text" id="date" autoComplete='off' required className="fadeIn third" name="date" onFocus={(e) => e.target.type = 'date'} onBlur={(e) => e.target.type = 'text'} placeholder="Date Graduated"/>
                     <input type='text' id='filePicture' className='fadeIn ninth' accept='.png, .jpg, .jpeg' onClick={(e) => e.target.type = 'file'} onChange={(e) => { setUpdateUserPicture(e.target.files[0]) }} required name='product_image' placeholder="Upload Picture"></input>
                     <input type="submit" className="fadeIn fourth" value="Submit"/>

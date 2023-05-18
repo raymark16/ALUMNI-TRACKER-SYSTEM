@@ -1,7 +1,7 @@
 import DataTable from 'react-data-table-component';
 import { useState } from 'react';
 import { saveAs } from 'file-saver';
-const docx = require('docx')
+var docx = require('docx')
 
 const TableUsers = ({users, searchInput, setSearchInput}) => {
     
@@ -196,6 +196,7 @@ const TableUsers = ({users, searchInput, setSearchInput}) => {
 
   return (
     <div className='mb-5 shadow rounded p-5' style={{backgroundColor:'white'}}>
+        <h1>Alumni Data</h1><button onClick={() => {createTable()}}>Print</button>
         <h1>Alumni Data</h1><button onClick={() => {createTable()}}>Print</button>
         <div className='text-end mb-2'><input type='text'  className='w-25' autoComplete='off' value={searchInput} placeholder='Search' onChange={(e) => setSearchInput(e.target.value)}></input></div>
         <DataTable

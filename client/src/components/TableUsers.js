@@ -1,5 +1,7 @@
 import DataTable from 'react-data-table-component';
 import { useState } from 'react';
+import { saveAs } from 'file-saver';
+var docx = require('docx')
 
 const TableUsers = ({users, searchInput, setSearchInput}) => {
     
@@ -12,6 +14,125 @@ const TableUsers = ({users, searchInput, setSearchInput}) => {
         row.date_graduated.toLowerCase().includes(searchInput.toLowerCase()) ||
         row.program.toLowerCase().includes(searchInput.toLowerCase())
         )
+    
+    const createTable = () => {
+        const table = new docx.Table({
+            columnWidths: [3505, 5505],
+            rows: [
+            ],
+        });
+        
+        const title = new docx.Paragraph({ text: searchInput != '' ? 'LIST OF ALUMNI FROM ' + searchInput : 'LIST OF ALUMNI', 
+        alignment: docx.AlignmentType.CENTER})
+        
+        const header = new docx.TableRow({
+            children: [
+                new docx.TableCell({
+                    width: {
+                        size: 3505,
+                        type: docx.WidthType.DXA,
+                    },
+                    children: [new docx.Paragraph({ text: 'NAME', 
+                    alignment: docx.AlignmentType.CENTER})],
+                }),
+                new docx.TableCell({
+                    width: {
+                        size: 3505,
+                        type: docx.WidthType.DXA,
+                    },
+                    children: [new docx.Paragraph({ text: 'PROGRAM', 
+                    alignment: docx.AlignmentType.CENTER})],
+                }),
+                new docx.TableCell({
+                    width: {
+                        size: 3505,
+                        type: docx.WidthType.DXA,
+                    },
+                    children: [new docx.Paragraph({ text: 'DATE GRADUATED', 
+                    alignment: docx.AlignmentType.CENTER})],
+                }),
+                new docx.TableCell({
+                    width: {
+                        size: 3505,
+                        type: docx.WidthType.DXA,
+                    },
+                    children: [new docx.Paragraph({ text: 'POSITION', 
+                    alignment: docx.AlignmentType.CENTER})],
+                }),
+            ],
+            tableHeader: true,
+        });
+
+        table.root.push(header);
+        
+        if (filteredList.length > 0){
+            filteredList.forEach(e => {
+                var tableRow=new docx.TableRow({
+                    children: [
+                        new docx.TableCell({
+                            width: {
+                                size: 3505,
+                                type: docx.WidthType.DXA,
+                            },
+                            children: [new docx.Paragraph(e.lastname + ", " + e.firstname)],
+                        }),
+                        new docx.TableCell({
+                            width: {
+                                size: 5505,
+                                type: docx.WidthType.DXA,
+                            },
+                            children: [new docx.Paragraph(e.program)],
+                        }),
+                        new docx.TableCell({
+                            width: {
+                                size: 5505,
+                                type: docx.WidthType.DXA,
+                            },
+                            children: [new docx.Paragraph(e.date_graduated)],
+                        }),
+                        new docx.TableCell({
+                            width: {
+                                size: 5505,
+                                type: docx.WidthType.DXA,
+                            },
+                            children: [new docx.Paragraph(e.position)],
+                        }),
+                    ],
+                });
+                table.root.push(tableRow);
+            });
+        }else{
+            var tableRow=new docx.TableRow({
+                children: [
+                    new docx.TableCell({
+                        columnSpan: 4,
+                        children: [new docx.Paragraph({text: "NO AVAILABLE DATA",
+                    alignment: docx.AlignmentType.CENTER})],
+                    }),
+                ]
+            })
+            table.root.push(tableRow);
+        }
+        const doc = new docx.Document({
+            sections: [
+                {
+                    children: [
+                        title,
+                        new docx.Paragraph({
+                            children: [],  // Just newline without text
+                          }),
+                        table,
+                    ],
+                },
+            ],
+        });
+        
+          docx.Packer.toBlob(doc).then((blob) => {
+            saveAs(blob, searchInput.length == 4 ? searchInput + " ALUMNI.docx" : searchInput.length > 0 ? searchInput + ".docx" : "FCPC ALUMNI.docx");
+            console.log("Document created successfully");
+          });
+    }
+
     const customStyles = {
         cell: {
             textOverflow: 'clip', whiteSpace: 'normal'
@@ -75,7 +196,7 @@ const TableUsers = ({users, searchInput, setSearchInput}) => {
 
   return (
     <div className='mb-5 shadow rounded p-5' style={{backgroundColor:'white'}}>
-        <h1>Alumni Data</h1>
+        <h1>Alumni Data</h1><button onClick={() => {createTable()}}>Print</button>
         <div className='text-end mb-2'><input type='text'  className='w-25' autoComplete='off' value={searchInput} placeholder='Search' onChange={(e) => setSearchInput(e.target.value)}></input></div>
         <DataTable
                 columns={columns}

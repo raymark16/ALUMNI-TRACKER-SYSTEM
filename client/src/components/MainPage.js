@@ -81,7 +81,7 @@ const MainPage = ({forceRender}) => {
         phone: e.phone,
         position: e.position,
         date_graduated: e.date_graduated,
-        program: e.Program.name,
+        program: e.Program.name
       }
       let year = parseInt(e.date_graduated.split('-')[0])
       if (year in userData){
@@ -100,6 +100,7 @@ const MainPage = ({forceRender}) => {
     let dataset_lbl = ''
 
     if(options[1] != '' && options[0] == ''){
+      dataset_lbl = options[1]
       labels =  _.range(2010, current_year, 1).map((e) => {return String(e)})
       values.length = labels.length
       values.fill(0)
@@ -117,6 +118,7 @@ const MainPage = ({forceRender}) => {
         }
       })
     }else if (options[1] == '' && options[0] != ''){
+      dataset_lbl = "Students Graduated in " + options[0]
       Object.entries(userData).forEach((e) => {
         const [k, v] = e
         setSearchInput(options[0])
@@ -134,6 +136,7 @@ const MainPage = ({forceRender}) => {
         }
       })
     }else{
+      dataset_lbl = "Students Graduated"
       labels =  _.range(2010, current_year, 1).map((e) => {return String(e)})
       values.length = labels.length
       values.fill(0)

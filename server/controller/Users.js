@@ -1,11 +1,28 @@
 const {Users, Programs} = require('../models')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const fs = require("fs");
 
 const updateUser = async (req,res) => {
     try {
-        const {firstname,lastname,email,phone,position,date_graduated,program,userEmail } = req.body
-        if(!firstname || !lastname || !email || !phone || !position || !date_graduated || !program || !userEmail ) return res.json({message:'All fields are required!'})
+        if (req.files === null) {
+            return res.send({ message: 'No File' })
+        }
+        const file = req.files.image
+
+        const {firstname,lastname,email,phone,position,date_graduated,program,userEmail, userImage } = req.body
+        if(!firstname || !lastname || !email || !phone || !position || !date_graduated || !program || !userEmail || !userImage) return res.json({message:'All fields are required!'})
+        file.mv(`${__dirname}/../../client/public/uploads/${email}_${file.name}`, err => {
+            if (err) {
+                console.log(err)
+                return res.send({ message: "Can't upload file" })
+            }
+        })
+        fs.unlink(`${__dirname}/../../client/public/uploads/${userImage}`, (err) => {
+            if (err) {
+                return res.send({message:`error deletion of file:"${err}`})
+            }
+        })
         await Users.update({
             firstname: firstname,
             lastname: lastname,
@@ -13,12 +30,14 @@ const updateUser = async (req,res) => {
             phone:phone,
             position:position,
             date_graduated:date_graduated,
+            image:`${email}_${file.name}`,
             program:program
         }, {
             where: {
                 email:userEmail
             }
         })
+
         return res.json({ message: 'Created user' })
     } catch (error) {
         return res.json({message:'Error add User'})
@@ -27,6 +46,11 @@ const updateUser = async (req,res) => {
 
 const registerUser = async (req,res) => {
     try {
+        if (req.files === null) {
+            return res.send({ message: 'No File' })
+        }
+        const file = req.files.image
+
         const {email,password,firstname,lastname,phone,position,date_graduated,program,role} = req.body
 
         if (!email || !password || !firstname || !lastname || !phone || !position || !date_graduated || !program || !role) {
@@ -40,6 +64,13 @@ const registerUser = async (req,res) => {
         if (userExist) {
             return res.send({ message: 'Email already taken' })
         }
+        file.mv(`${__dirname}/../../client/public/uploads/${req.body.email}_${req.files.image.name}`, err => {
+            if (err) {
+                console.log(err)
+                return res.send({ message: "Can't upload file" })
+            }
+        })
+
         const hashedPassword = await bcrypt.hash(password, parseInt(process.env.SALT));
         await Users.create({
             email: email,
@@ -50,7 +81,8 @@ const registerUser = async (req,res) => {
             position : position,
             date_graduated : date_graduated,
             program : program,
-            role : role
+            role : role,
+            image: `${req.body.email}_${req.files.image.name}`
         })
 
         return res.status(201).json('New User Created');
@@ -87,7 +119,8 @@ const loginUser = async (req,res) => {
             phone:user.phone, 
             position:user.position, 
             date_graduated:user.date_graduated, 
-            program:user.program, 
+            program:user.program,
+            image: user.image, 
             role: user.role
         };
         const token = jwt.sign(payload, process.env.JWT_SECRET, {

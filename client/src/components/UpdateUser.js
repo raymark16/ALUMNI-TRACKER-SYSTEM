@@ -20,10 +20,14 @@ const UpdateUser = ({setForceRender}) => {
       temp_btn.textContent = e.name
       document.getElementById('program_list').appendChild(temp_btn)
       programs[e.name] = e.program
+      if(userInfo.program == e.program){
+        document.getElementById('program_list').value = e.name
+      }
     })
   }
 
   getPrograms()
+
   const updateUserSubmit = async (e) => {
     e.preventDefault()
     if(!e.target.fname.value || !e.target.lname.value || !e.target.email.value || !e.target.phone.value || !e.target.position.value || e.target.program.value == 'Program: --' || !e.target.date.value || updateUserPicture == '') {
@@ -65,6 +69,8 @@ const UpdateUser = ({setForceRender}) => {
     setUpdateUserPicture(e.target.files[0])
     setFile(URL.createObjectURL(e.target.files[0]))
   }
+
+  
 
   return (
     <div>

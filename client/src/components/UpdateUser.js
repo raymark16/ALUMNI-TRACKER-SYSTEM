@@ -1,4 +1,4 @@
-
+import Jobs from './Jobs';
 import './Login.css'
 import axios from 'axios'
 import { toast } from 'react-hot-toast'
@@ -98,6 +98,7 @@ const UpdateUser = ({setForceRender}) => {
                 </form>
             
             </div>
+          <Jobs></Jobs>
         </div>
     </div>
   )

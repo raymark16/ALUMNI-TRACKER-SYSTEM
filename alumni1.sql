@@ -16,6 +16,24 @@ CREATE DATABASE /*!32312 IF NOT EXISTS*/`alumni_db` /*!40100 DEFAULT CHARACTER S
 
 USE `alumni_db`;
 
+/*Table structure for table `jobs` */
+
+DROP TABLE IF EXISTS `jobs`;
+
+CREATE TABLE `jobs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `job_position` varchar(255) NOT NULL,
+  `company_name` varchar(255) NOT NULL,
+  `company_type` varchar(255) NOT NULL,
+  `time_period` varchar(255) NOT NULL,
+  `createdAt` datetime NOT NULL,
+  `updatedAt` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+/*Data for the table `jobs` */
+
 /*Table structure for table `programs` */
 
 DROP TABLE IF EXISTS `programs`;
@@ -88,27 +106,18 @@ CREATE TABLE `users` (
   `date_graduated` varchar(255) NOT NULL,
   `program` varchar(255) NOT NULL,
   `role` varchar(255) NOT NULL,
+  `image` varchar(255) NOT NULL,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 /*Data for the table `users` */
 
-insert  into `users`(`id`,`email`,`password`,`firstname`,`lastname`,`phone`,`position`,`date_graduated`,`program`,`role`,`createdAt`,`updatedAt`) values 
-(1,'r@e','$2b$10$PcfpGJ6CUuQin7ugWcH0SOOWXIhGJgfKUG2GaP9ME.8FJXPL64m7G','ew','ew','ew','ew','2023-05-25','18','2','2023-05-09 07:38:41','2023-05-09 07:38:41'),
-(2,'ray@gmail.com','$2b$10$JuHuPQGduQM7CLVF7.5rT.kk3STzBQGtnRZXmI/ADnfhAj7LYCdXy','ray','mark','ew','ew','2021-05-11','18','2','2023-05-09 07:39:02','2023-05-09 07:39:02'),
-(3,'r@r','$2b$10$40UsuK9SjjI.E8eGbmPwWebD.3UPBwUbinR/ZYcKLsUwXgL7ipmbW','r','r','r','r','2020-05-17','1','2','2023-05-09 07:40:30','2023-05-09 08:23:39'),
-(4,'admin@gmail.com','$2b$10$yjqHJWjcs9y2m8YZU18/v.QCpzWMQ22XINstI408dG9JRJoreH94a','admin','admin','admin','admin','2020-05-10','admin','1','2023-05-09 08:25:16','2023-05-09 08:25:16'),
-(5,'raymark@gmail.com','$2b$10$/.nzV6cv3ySzWwJOIzINmeYEeKkhbGG/mqYVzACoUqvgUpE39dGu6','raymark','raymark','raymark','raymark','2020-05-17','1','2','2023-05-09 08:51:29','2023-05-09 08:51:29'),
-(11,'r@ra','$2b$10$40UsuK9SjjI.E8eGbmPwWebD.3UPBwUbinR/ZYcKLsUwXgL7ipmbW','r','r','r','r','2021-05-17','2','2','2023-05-09 07:40:30','2023-05-09 08:23:39'),
-(13,'r@raa','$2b$10$40UsuK9SjjI.E8eGbmPwWebD.3UPBwUbinR/ZYcKLsUwXgL7ipmbW','r','r','r','r','2021-05-17','3','2','2023-05-09 07:40:30','2023-05-09 08:23:39'),
-(14,'r@raak','$2b$10$40UsuK9SjjI.E8eGbmPwWebD.3UPBwUbinR/ZYcKLsUwXgL7ipmbW','r','r','r','r','2021-05-17','4','2','2023-05-09 07:40:30','2023-05-09 08:23:39'),
-(15,'r@raao','$2b$10$40UsuK9SjjI.E8eGbmPwWebD.3UPBwUbinR/ZYcKLsUwXgL7ipmbW','r','r','r','r','2020-05-17','1','2','2023-05-09 07:40:30','2023-05-09 08:23:39'),
-(16,'r@raap','$2b$10$40UsuK9SjjI.E8eGbmPwWebD.3UPBwUbinR/ZYcKLsUwXgL7ipmbW','r','r','r','r','2023-05-17','17','2','2023-05-09 07:40:30','2023-05-09 08:23:39'),
-(17,'e@2','$2b$10$eJ6qQTLY6FmlqdvMB8DSOOAwEcRVCPP1g6NIaVShn4MF971KWDNc.','q','s','a','1','2023-05-21','2','2','2023-05-12 07:03:30','2023-05-12 07:05:32'),
-(18,'admin@gmail.coma','$2b$10$Yr.MXw3H7VxJodTa7mpcuu67o1crqFoGuGTdxIFIHBV0PRDTKwsVC','d','q','s','d','2023-05-03','BACHELOR OF ARTS IN COMMUNICATION','2','2023-05-16 03:07:15','2023-05-16 03:07:15');
+insert  into `users`(`id`,`email`,`password`,`firstname`,`lastname`,`phone`,`position`,`date_graduated`,`program`,`role`,`image`,`createdAt`,`updatedAt`) values 
+(1,'admin@gmail.com','$2b$10$T8f6LK2H2zHOD/bNcydXgeL9aNlp4jvSKSuDuae4mI8YkmXLjlH3e','admin','admin','+639123123129','admin','2023-05-30','0','1','admin@gmail.com_341944235_557914406243255_145298723706861646_n.png','2023-05-30 02:31:53','2023-05-30 02:31:53'),
+(2,'d@d','$2b$10$9XsY2e02VGU4wu33pzV6HOjVWcj9gINWdSjSkYkVAupiPFcwwng9.','d','d','+639123123121','IT','2023-05-30','18','2','d@d_341944235_557914406243255_145298723706861646_n.png','2023-05-30 02:38:13','2023-05-30 02:38:13');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

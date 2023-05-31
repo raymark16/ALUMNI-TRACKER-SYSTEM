@@ -65,13 +65,9 @@ const Register = () => {
   return (
     <div>
         <div className="wrapper fadeInDown">
-        <div className="alumni mb-5">
-            <span className='spanA'>A</span>
-            <span className='spanL'>L</span>
-            <span className='spanU'>U</span>
-            <span className='spanM'>M</span>
-            <span className='spanN'>N</span>
-            <span className='spanI'>I</span>
+        <div className="mb-3" style={{fontSize:'4rem'}}>
+            ALUMNI
+
           </div>
             <div id="formContent">
                 <Link to='/login' ><h2 className='inactive underlineHover'>Sign In</h2></Link>

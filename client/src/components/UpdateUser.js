@@ -4,9 +4,11 @@ import axios from 'axios'
 import { toast } from 'react-hot-toast'
 import { useContext, useState } from "react"
 import AuthContext from '../context/Auth';
+import { useNavigate } from 'react-router-dom';
 const URLi = 'http://localhost:5000'
 
 const UpdateUser = ({setForceRender}) => {
+  const navigate = useNavigate()
   const { userInfo, verifyAuth } = useContext(AuthContext);
   const [updateUserPicture,setUpdateUserPicture] = useState('')
   const [file,setFile] = useState('')
@@ -85,16 +87,18 @@ const UpdateUser = ({setForceRender}) => {
                     <input type="text" id="lname" autoComplete='off' defaultValue={userInfo.lastname} required className="fadeIn second" name="lname" placeholder="Last Name"/>
                     <input type="email" id="email" autoComplete='off' defaultValue={userInfo.email} required className="fadeIn third" name="email" placeholder="Email"/>
                     <input type="text" id="phone" pattern="^(09|\+639)\d{9}$" autoComplete='off' defaultValue={userInfo.phone} required className="fadeIn fourth" name="phone" placeholder="Phone"/>
+                    <input type="submit" style={{margin: '5px',width: '85%', padding: '15px 32px', display: 'inline-block'}} className="fadeIn fifth" value="Submit"/>  
                     </div>
                     <div className='d-flex flex-column w-50'>
                     <input type="text" id="position" autoComplete='off' defaultValue={userInfo.position} required className="fadeIn first" name="position" placeholder="Position: ex.Employee/Owner/Lawyer"/>
                     <div className='program_list d-flex ms-1 w-100'> <select required className="fadeIn second" id='program_list' name="program"><option>Program: --</option></select></div>
                     <input type="text" id="date" autoComplete='off' defaultValue={userInfo.date_graduated} required className="fadeIn third" name="date" onFocus={(e) => e.target.type = 'date'} onBlur={(e) => e.target.type = 'text'} placeholder="Date Graduated"/>
                     <input type='text' id='filePicture' className='fadeIn fourth' accept='.png, .jpg, .jpeg' onClick={(e) => e.target.type = 'file'} onChange={onUpload} required name='product_image' placeholder="Upload Picture"></input>
+                    <input type='button' style={{margin: '5px',width: '85%', padding: '15px 32px', display: 'inline-block'}} className="fadeIn fifth" onClick={() => navigate('/')} value="Cancel"/>
                     </div>
                     
                     </div>
-                    <input type="submit" className="fadeIn fifth" value="Submit"/>
+
                 </form>
             
             </div>

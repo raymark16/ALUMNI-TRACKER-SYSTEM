@@ -16,7 +16,7 @@ export function AuthProvider({ children }) {
     
     useEffect(() => {
         verifyAuth()
-
+        
     }, [])
 
     return (

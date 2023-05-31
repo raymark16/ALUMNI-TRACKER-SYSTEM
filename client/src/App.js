@@ -11,7 +11,7 @@ import Loading from './components/Loading';
 import ErrorPage from './components/ErrorPage';
 import UpdateUser from './components/UpdateUser';
 import Layout from './components/Layout';
-
+import ViewUser from './components/ViewUser';
 export const URL = 'http://localhost:5000'
 
 function App() {
@@ -32,7 +32,8 @@ function App() {
         <Route path='/login' element={auth ? <Navigate to='/' /> : auth === undefined ? <Loading /> : <Login />}/>
         <Route path='/register' element={auth ? <Navigate to='/' /> : auth === undefined ? <Loading /> : <Register/>}/>
         <Route element={<PrivateRoutes/>}> 
-              <Route path='/' element={userInfo?.role === '2' ? <UpdateUser setForceRender={setForceRender}/> : <MainPage forceRender={forceRender}/>}/>
+              <Route path='/' element={userInfo?.role === '2' ? <ViewUser/>  : <MainPage forceRender={forceRender}/>}/>
+              <Route path='/update-user' element={userInfo?.role === '2' && <UpdateUser setForceRender={setForceRender}/> }/>
         </Route>
         <Route path='*' element={<ErrorPage/>}/>
     </Route>

@@ -46,7 +46,7 @@ const ViewUser = () => {
                         <h5 className='fadeIn first'>date graduated: {userInfo?.date_graduated}</h5>
                         <div className='d-flex justify-content-center'>
                         <h5 className='fadeIn first'>program: </h5>
-                        <h5 className='fadeIn first text-start'>{userProgram}</h5>
+                        <h5 className='fadeIn first text-start' style={{fontSize:'20px'}}>{userProgram}</h5>
                         </div>
                     </div>
                 </div>

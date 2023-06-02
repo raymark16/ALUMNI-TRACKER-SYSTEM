@@ -79,7 +79,6 @@ const MainPage = ({forceRender}) => {
         lastname: e.lastname,
         email: e.email,
         phone: e.phone,
-        position: e.position,
         date_graduated: e.date_graduated,
         program: e.Program.name
       }

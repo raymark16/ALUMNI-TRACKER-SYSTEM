@@ -9,7 +9,7 @@ const TableUsers = ({users, searchInput, setSearchInput}) => {
         row.firstname.toLowerCase().includes(searchInput.toLowerCase()) ||
         row.lastname.toLowerCase().includes(searchInput.toLowerCase()) ||
         row.phone.toLowerCase().includes(searchInput.toLowerCase()) ||
-        row.position.toLowerCase().includes(searchInput.toLowerCase()) ||
+        // row.position.toLowerCase().includes(searchInput.toLowerCase()) ||
         row.date_graduated.toLowerCase().includes(searchInput.toLowerCase()) ||
         row.program.toLowerCase().includes(searchInput.toLowerCase())
         )
@@ -94,7 +94,7 @@ const TableUsers = ({users, searchInput, setSearchInput}) => {
                                 size: 5505,
                                 type: docx.WidthType.DXA,
                             },
-                            children: [new docx.Paragraph(e.position)],
+                            children: [new docx.Paragraph('position')],
                         }),
                     ],
                 });
@@ -178,11 +178,11 @@ const TableUsers = ({users, searchInput, setSearchInput}) => {
             selector: row => row.phone,
             sortable: true,
         },
-        {
-            name: 'Position',
-            selector: row => row.position,
-            sortable: true,
-        },
+        // {
+        //     name: 'Position',
+        //     selector: row => row.position,
+        //     sortable: true,
+        // },
         {
             name: 'Date Graduated',
             selector: row => row.date_graduated

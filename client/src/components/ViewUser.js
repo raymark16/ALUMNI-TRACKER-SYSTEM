@@ -14,7 +14,6 @@ const ViewUser = () => {
 
     const getPrograms = async () => {
         const result = await axios.get(`${URL}/get-programs`)
-        console.log(result.data.result)
         result.data.result.forEach((e) => {
             if(userInfo.program === e.program) {
                 setUserProgram(e.name)
@@ -34,7 +33,8 @@ const ViewUser = () => {
             <img src={uploadedPicture} className='fadeIn first rounded' alt='image' width='150px' height='150px'></img>
             <div className='d-flex flex-column justify-content-center ms-2'>
             <h1 className='fadeIn first'>{`${userInfo?.firstname} ${userInfo?.lastname}`}</h1>
-            <h5 className='fadeIn first'>{userInfo?.position}</h5>
+            <h5 className='fadeIn first' style={{fontWeight: 'normal'}}>{userInfo?.position} at {userInfo?.company_name}</h5>
+            <h6 className='fadeIn first' style={{fontWeight: 'normal', fontStyle: 'italic'}}>{userInfo?.time_period}</h6>
             </div>
             </div>
             <hr></hr>
@@ -53,7 +53,6 @@ const ViewUser = () => {
                 <h5 className='fadeIn first text-start ms-2' style={{fontSize:'20px'}}>{userProgram}</h5>
                 </div>
             </div>
-                
                 <input type='button' style={{margin: '100px 5px 5px 5px',width: '25%', padding: '15px 32px', display: 'inline-block'}} className="fadeIn fifth" onClick={() => navigate('/update-user')} value="Update Profile"/>
             </div>
         </div>

@@ -20,6 +20,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false,
         }
-    })
+    },{
+        timestamps: false,
+        createdAt: false,
+        updatedAt: false,
+        })
     return Jobs
 }

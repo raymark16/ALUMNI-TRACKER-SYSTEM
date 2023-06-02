@@ -21,10 +21,6 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        position: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
         date_graduated: {
             type: DataTypes.STRING,
             allowNull: false,

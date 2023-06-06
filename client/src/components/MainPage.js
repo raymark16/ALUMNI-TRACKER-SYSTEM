@@ -71,23 +71,24 @@ const MainPage = ({forceRender}) => {
 
   const getUsers = async () => {
     const result = await axios.get(`${URL}/get-users`)
-    
-    result.data.result.forEach((e) => {
 
+    result.data.result.forEach((e) => {
       let resultObj = {
         firstname: e.firstname,
         lastname: e.lastname,
         email: e.email,
         phone: e.phone,
         date_graduated: e.date_graduated,
-        program: e.Program.name
+        program: e.Programs[0].name,
+        position: e.Jobs[0].job_position
       }
+      
       let year = parseInt(e.date_graduated.split('-')[0])
       if (year in userData){
-        userData[year]['programs'].push(e.Program.name)
+        userData[year]['programs'].push(e.Programs[0].name)
       }else{
         userData[year] = {programs: []}
-        userData[year]['programs'].push(e.Program.name)
+        userData[year]['programs'].push(e.Programs[0].name)
       }
       setUsers(prevObj => [...prevObj, resultObj])
     })

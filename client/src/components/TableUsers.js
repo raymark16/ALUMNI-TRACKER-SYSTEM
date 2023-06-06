@@ -94,7 +94,7 @@ const TableUsers = ({users, searchInput, setSearchInput}) => {
                                 size: 5505,
                                 type: docx.WidthType.DXA,
                             },
-                            children: [new docx.Paragraph('position')],
+                            children: [new docx.Paragraph(e.position)],
                         }),
                     ],
                 });

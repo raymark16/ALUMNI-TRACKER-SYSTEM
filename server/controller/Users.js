@@ -211,7 +211,9 @@ const isLoggedIn = async (req, res) => {
     });
 };
 const getUsers = async (req, res) => {
-    Users.hasOne(Programs, { foreignKey: 'program', sourceKey: 'program' });
+    Users.hasMany(Programs, { foreignKey: 'program', sourceKey: 'program' });
+    Users.hasMany(Jobs, { foreignKey: 'user_id', sourceKey: 'id' });
+    Jobs.belongsTo(Users, { foreignKey: 'user_id', targetKey: 'id' });
     Programs.belongsTo(Users, { foreignKey: 'program', targetKey: 'program' });
     const result = await Users.findAll({
         where: { role: '2' }, attributes: ['id', 'email', 'firstname', 'lastname', 'phone', 'date_graduated', 'program', 'role'],
@@ -219,6 +221,10 @@ const getUsers = async (req, res) => {
             model: Programs,
             required: false,
             attributes: ['name']
+        }, {
+            model: Jobs,
+            required: false,
+            attributes: ['job_position', 'company_name', 'company_type', 'time_period'],
         }]
     })
     res.json({ result })
